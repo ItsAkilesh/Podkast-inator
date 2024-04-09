@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Podkast (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Podkast (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

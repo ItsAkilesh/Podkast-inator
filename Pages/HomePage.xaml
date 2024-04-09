@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Podkast.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Podkast"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Tag="HomePage">
+
+    <Grid>
+
+        <StackPanel>
+            <Image VerticalAlignment="Top">
+                <Image.Source>
+                    <BitmapImage UriSource="/Assets/hero3.png"
+            />
+                </Image.Source>
+            </Image>
+            <TextBlock Text="Podkast AI⚡" FontSize="40px" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30" />
+            <TextBlock  Margin="10" TextAlignment="Center" FontSize="14px" TextWrapping="WrapWholeWords" Text="Podkast is an AI podcast summarization tool powered by OpenAI's GPT-3.5 and Whisper models. Built in C# with WinUI3 .NET Framework for Native Windows Desktop app environment. Podkast offers rapid summarization using GPT-3.5's advanced natural language processing. It incorporates OpenAI Whisper for precise speech-to-text conversion and translation."/>
+            <InfoBar
+            IsOpen="True"
+            Severity="Informational"
+            Title=""
+            Margin="20"
+            IsClosable="False"
+            Message="Compatible only with Windows 11" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                <Button x:Name="myButton" Style="{StaticResource AccentButtonStyle}">Get Started</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
