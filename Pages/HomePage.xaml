@@ -14,7 +14,7 @@
         <StackPanel>
             <Image VerticalAlignment="Top">
                 <Image.Source>
-                    <BitmapImage UriSource="/Assets/hero3.png"
+                    <BitmapImage UriSource="/Assets/Frame-1.png"
             />
                 </Image.Source>
             </Image>
@@ -24,7 +24,7 @@
             IsOpen="True"
             Severity="Informational"
             Title=""
-            Margin="20"
+            Margin="30"
             IsClosable="False"
             Message="Compatible only with Windows 11" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">

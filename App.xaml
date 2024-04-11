@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Podkast">
     <Application.Resources>
+        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
@@ -14,6 +15,13 @@
             <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
             <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
+            <Style x:Key="GalleryTileGridStyle" TargetType="Grid">
+                <Setter Property="Background" Value="{ThemeResource GalleryBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource GalleryBorderBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
