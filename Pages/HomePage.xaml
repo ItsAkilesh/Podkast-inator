@@ -14,7 +14,7 @@
         <StackPanel>
             <Image VerticalAlignment="Top">
                 <Image.Source>
-                    <BitmapImage UriSource="/Assets/Frame-1.png"
+                    <BitmapImage UriSource="/Assets/Frame-3.png"
             />
                 </Image.Source>
             </Image>

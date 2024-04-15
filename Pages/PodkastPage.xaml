@@ -8,34 +8,83 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     >
 
-    <Grid> 
-        <StackPanel>
-            <TextBlock
+    <Grid>
+
+            <StackPanel>
+                <TextBlock
                 x:Name="PageHeader"
                 Margin="20,30,36,0"
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="Podkasts" />
-            
-            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                <Button x:Name="PickAFileButton" Content="Open a file"
-            Click="PickAFileButton_Click" Margin="20,10,0,5"/>
-                <TextBlock x:Name="PickAFileOutputTextBlock" TextWrapping="Wrap" Padding="20,15,0,0"/>
-            </StackPanel>
-            
-            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                <Button x:Name="StartButton" HorizontalAlignment="Right" Content="Start Magic ✨" Margin="20,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
-                <Button x:Name="ClearButton" HorizontalAlignment="Right" Content="Clear ❌" Margin="20,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
-            </StackPanel>
 
-            <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="5" ItemHeight="210" ItemWidth="210" Margin="20">
-                <Rectangle Fill="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" RadiusY="9.5" RadiusX="11.5" Margin="0,0,10,10"/>
-                <Rectangle Fill="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" RadiusY="9.5" RadiusX="11.5" Margin="10,0,10,10" />
-                <Rectangle Fill="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" RadiusY="9.5" RadiusX="11.5" VariableSizedWrapGrid.ColumnSpan="2" VariableSizedWrapGrid.RowSpan="2" Margin="10,0,10,10"/>
-                <Rectangle Fill="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" RadiusY="9.5" RadiusX="11.5" VariableSizedWrapGrid.ColumnSpan="2" Margin="0,10,10,10"/>
+                <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button x:Name="PickAFileButton" Content="Open a file" Click="PickAFileButton_Click" Margin="20,10,0,5"/>
+                    <TextBlock x:Name="PickAFileOutputTextBlock" TextWrapping="Wrap" Padding="20,15,0,0"/>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button x:Name="StartButton" HorizontalAlignment="Right" Content="Start Magic ✨" Margin="20,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
+                    <Button x:Name="ClearButton" HorizontalAlignment="Right" Content="Clear ❌" Margin="10,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
+                </StackPanel>
                 
-            </VariableSizedWrapGrid>
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="podkastAlbumArt" HorizontalAlignment="Left" Margin="20,20,0,0" Source="/Assets/Blue-Logo.png" Height="128" Width="128" />
+                    <TextBlock Margin="20,50,0,0" FontSize="24" FontWeight="Bold">
+                        <Run x:Name="podkastTitle" Text="Title"/>
+                        <LineBreak/>
+                        <Run x:Name="podkastHosts" FontWeight="Normal" FontSize="18" Text="Host and Speakers"/>
+                    </TextBlock>
+                </StackPanel>
+
+            <Grid>
+
+                    <StackPanel Orientation="Horizontal">
+                        
+                        <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" MaxWidth="400" Width="400" Height="400" MaxHeight="600" >
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                                    <Run FontWeight="Bold" Text="Transcript"/>
+                                    <LineBreak/><LineBreak/>
+                                    <Run x:Name="podkastTranscript" Text="Podcast Transcript goes here."/>     
+                                </TextBlock>
+                            </ScrollViewer>
+                        </Border>
+
+                    <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                                    <Run FontWeight="Bold" Text="Summary"/>
+                                    <LineBreak/><LineBreak/>
+                                    <Run x:Name="podkastSummary" Text="Podcast Summary goes here."/>
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                                    <Run FontWeight="Bold" Text="Context, Genre and Similar Podcasts"/>
+                                    <LineBreak/><LineBreak/>
+                                    <Run x:Name="podkastSimilar" Text="The Genre of the podcast"/>
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <WebView2 x:Name="podkastContextChat" Source="https://chat.openai.com" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MinHeight="200" MinWidth="200"/>
+                        </ScrollViewer>
+                    </Border>
+                    
+                </StackPanel>
 
 
-        </StackPanel>    
+            </Grid>
+                
+
+                
+                
+        </StackPanel>
+
     </Grid>
 </Page>
