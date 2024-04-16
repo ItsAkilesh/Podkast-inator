@@ -80,7 +80,7 @@ namespace Podkast.Pages
             string userInput = InputTextBox.Text;
             if (!string.IsNullOrEmpty(userInput))
             {
-                AddMessageToConversation($"User: {userInput}");
+                AddMessageToConversation($"You: {userInput}");
                 InputTextBox.Text = string.Empty;
                 var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
                 {
@@ -89,35 +89,43 @@ namespace Podkast.Pages
                     ChatMessage.FromSystem("You are a helpful assistant."),
                     ChatMessage.FromUser(userInput)
                 },
-                    Model = Models.Gpt_4_1106_preview,
+                    Model = Models.ChatGpt3_5Turbo,
                     MaxTokens = 300
                 });
 
                 if (completionResult != null && completionResult.Successful)
                 {
-                    AddMessageToConversation("GPT: " + completionResult.Choices.First().Message.Content);
+                    AddMessageToConversation("Podkast AI: " + completionResult.Choices.First().Message.Content);
                 }
                 else
                 {
-                    AddMessageToConversation("GPT: Sorry, something bad happened: " + completionResult.Error?.Message);
+                    AddMessageToConversation("Podkast AI: Sorry, something bad happened: " + completionResult.Error?.Message);
                 }
             }
         }
+        private void InputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter && !string.IsNullOrWhiteSpace(InputTextBox.Text))
+            {
+                SendButton_Click(this, new RoutedEventArgs());
+            }
+        }
+        public class MessageItem
+        {
+            public string Text { get; set; }
+            public SolidColorBrush Color { get; set; }
+        }
         private void AddMessageToConversation(string message)
         {
-            var messageBlock = new TextBlock();
-            messageBlock.Text = message;
-            messageBlock.Margin = new Thickness(5);
-            if (message.StartsWith("User:"))
-            {
-                messageBlock.Foreground = new SolidColorBrush(Colors.LightBlue);
-            }
-            else
-            {
-                messageBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
-            }
-            ConversationList.Items.Add(message);
-            ConversationList.ScrollIntoView(ConversationList.Items[ConversationList.Items.Count - 1]);
+            var messageItem = new MessageItem();
+            messageItem.Text = message;
+            messageItem.Color = message.StartsWith("You:") ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.White);
+            ConversationList.Items.Add(messageItem);
+
+            // handle scrolling
+            ConversationScrollViewer.UpdateLayout();
+            ConversationScrollViewer.ChangeView(null, ConversationScrollViewer.ScrollableHeight, null);
+
         }
     }
 }
