@@ -9,7 +9,9 @@
     >
 
     <Grid>
-
+        <ScrollView VerticalScrollBarVisibility="Auto">
+            
+        
             <StackPanel>
                 <TextBlock
                 x:Name="PageHeader"
@@ -37,10 +39,10 @@
                 </StackPanel>
 
             <Grid>
+                    <ScrollView HorizontalScrollBarVisibility="Hidden">
+                        <StackPanel Orientation="Horizontal">
 
-                    <StackPanel Orientation="Horizontal">
-                        
-                        <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" MaxWidth="400" Width="400" Height="400" MaxHeight="600" >
+                            <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" MaxWidth="400" Width="400" Height="400" MaxHeight="600" >
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
                                     <Run FontWeight="Bold" Text="Transcript"/>
@@ -60,31 +62,34 @@
                         </ScrollViewer>
                     </Border>
 
-                    <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                        <Border Margin="20,20,50,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
                                     <Run FontWeight="Bold" Text="Context, Genre and Similar Podcasts"/>
                                     <LineBreak/><LineBreak/>
                                     <Run x:Name="podkastSimilar" Text="The Genre of the podcast"/>
-                            </TextBlock>
+                                </TextBlock>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                    </ScrollView>
+                </Grid>
+            <Grid>
+                <StackPanel Margin="20,20,0,0"  Orientation="Vertical" HorizontalAlignment="Stretch">
+                        <ScrollViewer x:Name="ConversationScrollViewer" VerticalScrollBarVisibility="Auto" MaxHeight="500">
+                            <ListView x:Name="ConversationList" />
                         </ScrollViewer>
-                    </Border>
-
-                    <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <WebView2 x:Name="podkastContextChat" Source="https://chat.openai.com" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MinHeight="200" MinWidth="200"/>
-                        </ScrollViewer>
-                    </Border>
-                    
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="InputTextBox" HorizontalAlignment="Stretch"/>
+                                <Button Margin="10,0,0,0" x:Name="SendButton" Content="Send" Click="SendButton_Click"/>
+                            </StackPanel>
+                        
                 </StackPanel>
-
-
             </Grid>
-                
 
-                
-                
-        </StackPanel>
 
+
+            </StackPanel>
+        </ScrollView>
     </Grid>
 </Page>

@@ -14,7 +14,11 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-
+using OpenAI;
+using OpenAI.Managers;
+using OpenAI.ObjectModels.RequestModels;
+using OpenAI.ObjectModels;
+using Microsoft.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,11 +30,18 @@ namespace Podkast.Pages
     /// </summary>
     public sealed partial class PodkastPage : Page
     {
+        private OpenAIService openAiService;
         private StorageFile file;
         public PodkastPage()
         {
             this.InitializeComponent();
-            
+            var openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+            openAiService = new OpenAIService(new OpenAiOptions()
+            {
+                ApiKey = openAiKey
+            });
+
         }
         private async void PickAFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -63,6 +74,50 @@ namespace Podkast.Pages
             {
                 PickAFileOutputTextBlock.Text = "Operation cancelled.";
             }
+        }
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            string userInput = InputTextBox.Text;
+            if (!string.IsNullOrEmpty(userInput))
+            {
+                AddMessageToConversation($"User: {userInput}");
+                InputTextBox.Text = string.Empty;
+                var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+                {
+                    Messages = new List<ChatMessage>
+                {
+                    ChatMessage.FromSystem("You are a helpful assistant."),
+                    ChatMessage.FromUser(userInput)
+                },
+                    Model = Models.Gpt_4_1106_preview,
+                    MaxTokens = 300
+                });
+
+                if (completionResult != null && completionResult.Successful)
+                {
+                    AddMessageToConversation("GPT: " + completionResult.Choices.First().Message.Content);
+                }
+                else
+                {
+                    AddMessageToConversation("GPT: Sorry, something bad happened: " + completionResult.Error?.Message);
+                }
+            }
+        }
+        private void AddMessageToConversation(string message)
+        {
+            var messageBlock = new TextBlock();
+            messageBlock.Text = message;
+            messageBlock.Margin = new Thickness(5);
+            if (message.StartsWith("User:"))
+            {
+                messageBlock.Foreground = new SolidColorBrush(Colors.LightBlue);
+            }
+            else
+            {
+                messageBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
+            }
+            ConversationList.Items.Add(message);
+            ConversationList.ScrollIntoView(ConversationList.Items[ConversationList.Items.Count - 1]);
         }
     }
 }
