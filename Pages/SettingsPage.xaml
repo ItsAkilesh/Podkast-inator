@@ -11,15 +11,23 @@
 
     <Grid Margin="20,20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Row for StackPanel -->
             <RowDefinition Height="Auto"/> <!-- Row for TextBlock -->
             <RowDefinition Height="Auto"/> <!-- Row for StackPanel -->
+            <RowDefinition Height="*"/> <!-- Row for Info -->
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Set OpenAI API Key: " Grid.Row="0" Margin="0,0,0,10" />
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <!--<TextBlock Text="Settings" FontWeight="Bold" FontSize="30" Grid.Row="0" Margin="0,0,0,20" />-->
+        <TextBlock x:Name="PageHeader" Margin="0,0,0,20" Style="{StaticResource TitleTextBlockStyle}" Text="Settings" />
+
+        <TextBlock Text="Set OpenAI API Key: " Grid.Row="1" Margin="0,0,0,10" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBox x:Name="SetOpenAIKeyTextBox" PlaceholderText="Enter OpenAI Key" TextWrapping="Wrap" Width="500" MaxWidth="700" Height="20" MaxHeight="20"/>
             <Button Margin="10,0,0,0"  x:Name="SetKey" Content="Set Key" Click="SetOpenAIKeyButton_Click" HorizontalAlignment="Right"/>
         </StackPanel>
+
+        <HyperlinkButton Margin="10,0,0,0" Grid.Row="3" x:Name="Info" Content="Info"  Click="InfoButton_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>
