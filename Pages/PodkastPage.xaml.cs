@@ -125,6 +125,8 @@ namespace Podkast.Pages
 
             // Clear conversation window
             ConversationList.Items.Clear();
+
+            conversationContext = new List<ChatMessage>();
         }
         private void InputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
