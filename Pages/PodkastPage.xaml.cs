@@ -20,6 +20,7 @@ using OpenAI.ObjectModels.RequestModels;
 using OpenAI.ObjectModels;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
+using OpenAI.ObjectModels.ResponseModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -76,6 +77,8 @@ namespace Podkast.Pages
                 PickAFileOutputTextBlock.Text = "Operation cancelled.";
             }
         }
+        private List<ChatMessage> conversationContext = new List<ChatMessage>();
+
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             string userInput = InputTextBox.Text;
@@ -83,20 +86,20 @@ namespace Podkast.Pages
             {
                 AddMessageToConversation($"You: {userInput}");
                 InputTextBox.Text = string.Empty;
+
+                conversationContext.Add(ChatMessage.FromUser(userInput)); // Add user input to conversation context
+
                 var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
                 {
-                    Messages = new List<ChatMessage>
-                {
-                    ChatMessage.FromSystem("You are a helpful assistant."),
-                    ChatMessage.FromUser(userInput)
-                },
+                    Messages = conversationContext, // Use conversation context
                     Model = Models.ChatGpt3_5Turbo,
-                    MaxTokens = 300
+                    MaxTokens = 800
                 });
 
                 if (completionResult != null && completionResult.Successful)
                 {
                     AddMessageToConversation("Podkast AI: " + completionResult.Choices.First().Message.Content);
+                    conversationContext.Add(completionResult.Choices.First().Message); // Add AI response to conversation context
                 }
                 else
                 {
