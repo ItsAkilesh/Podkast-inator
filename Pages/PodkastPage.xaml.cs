@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -35,6 +37,7 @@ namespace Podkast.Pages
     {
         private OpenAIService openAiService;
         private StorageFile file;
+        public string urlForAlbumArtGen;
         private List<ChatMessage> conversationContext = new List<ChatMessage>();
         public PodkastPage()
         {
@@ -112,6 +115,8 @@ namespace Podkast.Pages
 
         private async void StartMagicButton_Click(object sender, RoutedEventArgs e)
         {
+            conversationContext.Add(ChatMessage.FromUser("You are Podkast AI. An Generative AI tool used to summarize podcasts uploaded and transcripted. Keep your responses short. Do no hallucinate information that was not provided to you although attempt answering questions only if you confidently know the context."));
+
             string fileName = file.Name;
 
             byte[] sampleFileBytes;
@@ -127,6 +132,7 @@ namespace Podkast.Pages
                 }
             }
 
+            //Transcript
             var audioResult = await openAiService.Audio.CreateTranscription(new AudioCreateTranscriptionRequest
             {
                 FileName = fileName,
@@ -138,7 +144,10 @@ namespace Podkast.Pages
             if (audioResult.Successful)
             {
                 System.Diagnostics.Debug.WriteLine(audioResult.ToString());
+
+
                 podkastTranscript.Text = audioResult.Text;
+                conversationContext.Add(ChatMessage.FromUser(audioResult.Text.ToString()));
             }
             else
             {
@@ -148,27 +157,182 @@ namespace Podkast.Pages
                 }
                 podkastTranscript.Text = ($"{audioResult.Error.Code}: {audioResult.Error.Message}");
             }
+
+            //Summarization
+            conversationContext.Add(ChatMessage.FromUser("Summarize the Podcast"));
+
+            var summaryResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = conversationContext, // Use conversation context
+                Model = Models.ChatGpt3_5Turbo,
+                MaxTokens = 800
+            });
+
+            if (summaryResult != null && summaryResult.Successful)
+            {
+                podkastSummary.Text = summaryResult.Choices.First().Message.Content.ToString();
+                conversationContext.Add(summaryResult.Choices.First().Message); // Add AI response to conversation context
+            }
+            else
+            {
+                podkastSummary.Text = (summaryResult.Error?.Message).ToString();
+            }
+
+            //Title
+            conversationContext.Add(ChatMessage.FromUser("What is the name of this podcast? Tell the name only"));
+
+            var titleResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = conversationContext, // Use conversation context
+                Model = Models.ChatGpt3_5Turbo,
+                MaxTokens = 800
+            });
+
+            if (titleResult != null && titleResult.Successful)
+            {
+                podkastTitle.Text = titleResult.Choices.First().Message.Content.ToString();
+                conversationContext.Add(titleResult.Choices.First().Message); // Add AI response to conversation context
+            }
+            else
+            {
+                podkastTitle.Text = (titleResult.Error?.Message).ToString();
+            }
+
+            conversationContext.Add(ChatMessage.FromUser("Tell only the names of the speakers in the podcast"));
+
+            //Hosts and Speakers results
+
+            var hostsResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = conversationContext, // Use conversation context
+                Model = Models.ChatGpt3_5Turbo,
+                MaxTokens = 800
+            });
+
+            if (hostsResult != null && hostsResult.Successful)
+            {
+                podkastHosts.Text = hostsResult.Choices.First().Message.Content.ToString();
+                conversationContext.Add(hostsResult.Choices.First().Message); // Add AI response to conversation context
+            }
+            else
+            {
+                podkastHosts.Text = (hostsResult.Error?.Message).ToString();
+            }
+
+            //Context Generation
+
+            conversationContext.Add(ChatMessage.FromUser("What is the Context of this podcast? What is the Genre of this podcast? Suggest similar podcasts to this. (Write answers to the above questions as separate paragraphs.)"));
+
+            var contextResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = conversationContext, // Use conversation context
+                Model = Models.Gpt_4_turbo,
+                MaxTokens = 800
+            });
+
+            if (contextResult != null && hostsResult.Successful)
+            {
+                podkastSimilar.Text = contextResult.Choices.First().Message.Content.ToString();
+                conversationContext.Add(contextResult.Choices.First().Message); // Add AI response to conversation context
+            }
+            else
+            {
+                podkastSimilar.Text = (contextResult.Error?.Message).ToString();
+            }
+
+            //Album art generation with Dall-E 3
+
+            conversationContext.Add(ChatMessage.FromUser("Use the context present to generate a prompt for the album art for this podcast. Be extremely descriptive, include already known references and mention styles if necessary. Keep the prompt brief and informative"));
+
+            var artResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest()
+            {
+                Messages = conversationContext, // Use conversation context
+                Model = Models.Gpt_4_turbo,
+                MaxTokens = 120
+            });
+
+            if (artResult != null && artResult.Successful)
+            {
+                String promptForImage = artResult.Choices.First().Message.Content.ToString();
+                conversationContext.Add(artResult.Choices.First().Message); // Add AI response to conversation context
+
+                var imageResult = await openAiService.Image.CreateImage(new ImageCreateRequest
+                {
+
+                    Model = Models.Dall_e_3,
+                    Prompt = artResult.Choices.First().Message.Content.ToString(),
+                    N = 1,
+                    Size = StaticValues.ImageStatics.Size.Size1024,
+                    ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
+                });
+
+
+                urlForAlbumArtGen = string.Join("\n", imageResult.Results.Select(r => r.Url));
+
+                System.Diagnostics.Debug.WriteLine(string.Join("\n", imageResult.Results.Select(r => r.Url)));
+
+                // Create a HttpClient instance
+                using (HttpClient client = new HttpClient())
+                {
+                    // Download the image bytes
+                    byte[] imageBytes = await client.GetByteArrayAsync(urlForAlbumArtGen);
+
+                    // Write the image bytes to a local file
+                    await File.WriteAllBytesAsync(@"C:\Users\akile\OneDrive\Desktop\temp_image_art.png", imageBytes);
+
+                    podkastAlbumArt.Source = new BitmapImage(new Uri(@"C:\Users\akile\OneDrive\Desktop\temp_image_art.png"));
+
+
+
+                }
+
+
+
+            }
         }
 
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+            private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             // Reset podcast title and hosts to default values
             podkastTitle.Text = "Title";
-            podkastHosts.Text = "Host and Speakers";
+            podkastHosts.Text = "Hosts and Speakers";
 
             // Reset podcast album art to the default image
             // Ensure the image path matches your project's file structure
             podkastAlbumArt.Source = new BitmapImage(new Uri("ms-appx:///Assets/Blue-Logo.png"));
 
-            // Reset transcript, summary, and context windows to default values
-            podkastTranscript.Text = "Podcast Transcript goes here.";
+            try
+            {
+                // Get the file to delete synchronously
+                StorageFile fileToDelete = StorageFile.GetFileFromApplicationUriAsync(new Uri(@"C:\Users\akile\OneDrive\Desktop\temp_image_art.png")).AsTask().Result;
+
+                // Delete the file synchronously
+                fileToDelete.DeleteAsync().AsTask().Wait();
+
+                Console.WriteLine("File deleted successfully.");
+            }
+            catch (AggregateException ex)
+            {
+                foreach (var innerException in ex.InnerExceptions)
+                {
+                    Console.WriteLine($"Error deleting file: {innerException.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting file: {ex.Message}");
+            }
+
+                // Reset transcript, summary, and context windows to default values
+                podkastTranscript.Text = "Podcast Transcript goes here.";
             podkastSummary.Text = "Podcast Summary goes here.";
             podkastSimilar.Text = "The Genre of the podcast";
 
             // Clear conversation window
             ConversationList.Items.Clear();
+            PickAFileOutputTextBlock.Text = "";
 
-            conversationContext = new List<ChatMessage>();
+            conversationContext.Clear();
         }
         private void InputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {

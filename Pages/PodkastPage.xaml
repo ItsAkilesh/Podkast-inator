@@ -30,7 +30,7 @@
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="podkastAlbumArt" HorizontalAlignment="Left" Margin="20,20,0,0" Source="/Assets/Blue-Logo.png" Height="128" Width="128" />
+                    <Image x:Name="podkastAlbumArt" HorizontalAlignment="Left" Margin="20,20,0,0" Source="ms-appx:///Assets/Blue-Logo.png" Height="128" Width="128" />
                     <TextBlock Margin="20,50,0,0" FontSize="24" FontWeight="Bold">
                         <Run x:Name="podkastTitle" Text="Title"/>
                         <LineBreak/>
@@ -54,7 +54,7 @@
 
                     <Border Margin="20,20,0,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                            <TextBlock Margin="20,20,20,30" TextWrapping="WrapWholeWords">
                                     <Run FontWeight="Bold" Text="Summary"/>
                                     <LineBreak/><LineBreak/>
                                     <Run x:Name="podkastSummary" Text="Podcast Summary goes here."/>
@@ -64,7 +64,7 @@
 
                         <Border Margin="20,20,50,0" Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondary}" CornerRadius="9.5" Width="400" MaxWidth="600" Height="400" MaxHeight="600" >
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <TextBlock Margin="20,20,0,0" TextWrapping="WrapWholeWords">
+                                <TextBlock Margin="20,20,20,30" TextWrapping="WrapWholeWords">
                                     <Run FontWeight="Bold" Text="Context, Genre and Similar Podcasts"/>
                                     <LineBreak/><LineBreak/>
                                     <Run x:Name="podkastSimilar" Text="The Genre of the podcast"/>
