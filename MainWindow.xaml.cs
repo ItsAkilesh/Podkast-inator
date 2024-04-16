@@ -34,7 +34,7 @@ namespace Podkast
         {
             if (args.IsSettingsSelected)
             {
-                // Handle settings selection
+                contentFrame.Navigate(typeof(Podkast.Pages.SettingsPage));
             }
             else
             {
