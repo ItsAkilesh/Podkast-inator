@@ -19,6 +19,7 @@ using OpenAI.Managers;
 using OpenAI.ObjectModels.RequestModels;
 using OpenAI.ObjectModels;
 using Microsoft.UI;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -102,6 +103,25 @@ namespace Podkast.Pages
                     AddMessageToConversation("Podkast AI: Sorry, something bad happened: " + completionResult.Error?.Message);
                 }
             }
+        }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Reset podcast title and hosts to default values
+            podkastTitle.Text = "Title";
+            podkastHosts.Text = "Host and Speakers";
+
+            // Reset podcast album art to the default image
+            // Ensure the image path matches your project's file structure
+            podkastAlbumArt.Source = new BitmapImage(new Uri("ms-appx:///Assets/Blue-Logo.png"));
+
+            // Reset transcript, summary, and context windows to default values
+            podkastTranscript.Text = "Podcast Transcript goes here.";
+            podkastSummary.Text = "Podcast Summary goes here.";
+            podkastSimilar.Text = "The Genre of the podcast";
+
+            // Clear conversation window
+            ConversationList.Items.Clear();
         }
         private void InputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {

@@ -26,7 +26,7 @@
 
                 <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                     <Button x:Name="StartButton" HorizontalAlignment="Right" Content="Start Magic ✨" Margin="20,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
-                    <Button x:Name="ClearButton" HorizontalAlignment="Right" Content="Clear ❌" Margin="10,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
+                    <Button x:Name="ClearButton" HorizontalAlignment="Right" Click="ClearButton_Click" Content="Clear ❌" Margin="10,10,0,0" Style="{ThemeResource DefaultButtonStyle}"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
@@ -34,7 +34,7 @@
                     <TextBlock Margin="20,50,0,0" FontSize="24" FontWeight="Bold">
                         <Run x:Name="podkastTitle" Text="Title"/>
                         <LineBreak/>
-                        <Run x:Name="podkastHosts" FontWeight="Normal" FontSize="18" Text="Host and Speakers"/>
+                        <Run x:Name="podkastHosts" FontWeight="Normal" FontSize="18" Text="Hosts and Speakers"/>
                     </TextBlock>
                 </StackPanel>
 
