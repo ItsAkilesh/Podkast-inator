@@ -21,6 +21,7 @@ using OpenAI.ObjectModels;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
 using OpenAI.ObjectModels.ResponseModels;
+using Windows.Storage.Streams;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,6 +35,7 @@ namespace Podkast.Pages
     {
         private OpenAIService openAiService;
         private StorageFile file;
+        private List<ChatMessage> conversationContext = new List<ChatMessage>();
         public PodkastPage()
         {
             this.InitializeComponent();
@@ -77,7 +79,7 @@ namespace Podkast.Pages
                 PickAFileOutputTextBlock.Text = "Operation cancelled.";
             }
         }
-        private List<ChatMessage> conversationContext = new List<ChatMessage>();
+        
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
@@ -105,6 +107,46 @@ namespace Podkast.Pages
                 {
                     AddMessageToConversation("Podkast AI: Sorry, something bad happened: " + completionResult.Error?.Message);
                 }
+            }
+        }
+
+        private async void StartMagicButton_Click(object sender, RoutedEventArgs e)
+        {
+            string fileName = file.Name;
+
+            byte[] sampleFileBytes;
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                using (var dataReader = new DataReader(stream))
+                {
+                    await dataReader.LoadAsync((uint)stream.Size);
+                    System.Diagnostics.Debug.WriteLine(dataReader.ToString());
+                    sampleFileBytes = new byte[stream.Size];
+                    System.Diagnostics.Debug.WriteLine(sampleFileBytes.ToString());
+                    dataReader.ReadBytes(sampleFileBytes);
+                }
+            }
+
+            var audioResult = await openAiService.Audio.CreateTranscription(new AudioCreateTranscriptionRequest
+            {
+                FileName = fileName,
+                File = sampleFileBytes,
+                Model = Models.WhisperV1,
+                ResponseFormat = StaticValues.AudioStatics.ResponseFormat.VerboseJson
+            });
+
+            if (audioResult.Successful)
+            {
+                System.Diagnostics.Debug.WriteLine(audioResult.ToString());
+                podkastTranscript.Text = audioResult.Text;
+            }
+            else
+            {
+                if (audioResult.Error == null)
+                {
+                    throw new Exception("Unknown Error");
+                }
+                podkastTranscript.Text = ($"{audioResult.Error.Code}: {audioResult.Error.Message}");
             }
         }
 
