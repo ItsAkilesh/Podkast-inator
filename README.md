@@ -10,7 +10,7 @@ WinUI app in C#
 
 
 
-MIT License
+# MIT License
 
 Copyright (c) 2024, Akilesh S
 
