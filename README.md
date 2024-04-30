@@ -2,6 +2,8 @@
 
 WinUI app in C#
 
+Just paste your OpenAI API key in the settings page and you're good to go!
+
 ![image](https://github.com/ItsAkilesh/Podkast/assets/50264624/f7da1004-634d-403f-8a06-6b847e5ea689)
 
 ![image](https://github.com/ItsAkilesh/Podkast/assets/50264624/ff1ac6bb-3c54-4d22-b836-095f951ac5a6)
