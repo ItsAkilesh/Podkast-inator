@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="e9f87279-a512-4ce1-ae88-dae5c5f5476c"
-    Publisher="CN=akile"
-    Version="1.0.0.0" />
+    Name="com.ItsAkilesh.Podkast"
+    Publisher="CN=Akilesh S"
+    Version="1.6.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="e9f87279-a512-4ce1-ae88-dae5c5f5476c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Podkast</DisplayName>
-    <PublisherDisplayName>akile</PublisherDisplayName>
+    <DisplayName>Podkast AI</DisplayName>
+    <PublisherDisplayName>Akilesh S</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -41,6 +41,8 @@
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
